@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title> ¿Como estamos hoy? </title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+  :root {
+    --color-primary: #111827;
+    --color-text: #6b7280;
+    --color-bg: #ffffff;
+    --color-card-bg: #f9fafb;
+    --color-card-shadow: rgba(0,0,0,0.05);
+    --color-accent-happy: #16a34a;
+    --color-accent-sad: #3b82f6;
+    --color-accent-angry: #dc2626;
+    --color-accent-neutral: #374151;
+    --transition-speed: 0.3s;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    background: var(--color-bg);
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+  }
+  header .logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    user-select: none;
+  }
+  main {
+    max-width: 1200px;
+    margin: 3rem auto 6rem auto;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  .hero {
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+  .hero p {
+    color: var(--color-text);
+    font-size: 1.125rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .btn-primary {
+    margin-top: 1.5rem;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: background-color var(--transition-speed) ease;
+  }
+  .btn-primary:hover, .btn-primary:focus {
+    background-color: #1f2937;
+    outline: none;
+  }
+  section.status-card {
+    background: var(--color-card-bg);
+    box-shadow: 0 2px 8px var(--color-card-shadow);
+    border-radius: 0.75rem;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+    text-align: center;
+    user-select: none;
+  }
+  section.status-card h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+  .emotion-label {
+    font-weight: 800;
+    font-size: 3rem;
+    margin: 0.5rem 0 1rem;
+    transition: color var(--transition-speed);
+  }
+  .emotion-happy { color: var(--color-accent-happy); }
+  .emotion-sad { color: var(--color-accent-sad); }
+  .emotion-angry { color: var(--color-accent-angry); }
+  .emotion-neutral { color: var(--color-accent-neutral); }
+
+  .mic-status {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 1rem;
+    color: var(--color-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .mic-status span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ef4444; /* red by default */
+    box-shadow: 0 0 6px #ef4444;
+    transition: background-color var(--transition-speed);
+  }
+  .mic-on span {
+    background-color: #22c55e; /* green */
+    box-shadow: 0 0 10px #22c55e;
+  }
+
+  /* Simple bar meter representing audio volume */
+  .volume-meter {
+    width: 100%;
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+  .volume-meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    border-radius: 0.5rem;
+    transition: width 0.15s ease-out;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    padding: 2rem 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 {
+      font-size: 2.3rem;
+    }
+    main {
+      margin: 2rem 1rem 4rem 1rem;
+    }
+    section.status-card {
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" aria-label="Logo Detector de emociones por voz">🎙️ Emoción Voz</div>
+</header>
+
+<main>
+  <section class="hero" role="region" aria-labelledby="hero-title">
+    <h1 id="hero-title">Detector de Emociones por Voz</h1>
+    <p>Captura sonidos en tiempo real y detecta la emoción según el timbre y tono de tu voz.</p>
+    <button type="button" id="toggle-mic" class="btn-primary" aria-pressed="false" aria-label="Activar o desactivar micrófono">
+      Iniciar Captura de Voz
+    </button>
+  </section>
+
+  <section class="status-card" role="region" aria-live="polite" aria-atomic="true" aria-label="Estado de la detección de emociones">
+    <h2>Emoción detectada</h2>
+    <div id="emotion" class="emotion-label emotion-neutral" aria-live="assertive" aria-atomic="true">Neutral</div>
+    <div class="mic-status" id="mic-status" aria-live="polite">
+      <span></span>
+      <div id="mic-text">Micrófono apagado</div>
+    </div>
+    <div class="volume-meter" aria-label="Nivel de volumen detectado">
+      <div class="volume-meter-fill" id="volume-fill"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; 2024 Feria de Ciencia - Detector de Emociones
+</footer>
+
+<script>
+(async () => {
+  const toggleMicBtn = document.getElementById('toggle-mic');
+  const micStatus = document.getElementById('mic-status');
+  const micText = document.getElementById('mic-text');
+  const emotionText = document.getElementById('emotion');
+  const volumeFill = document.getElementById('volume-fill');
+
+  let audioContext;
+  let analyser;
+  let dataArray;
+  let sourceNode;
+  let microphoneStream;
+  let listening = false;
+  let animationId;
+
+  // Simple emotion classification rules based on frequency and volume
+  // This is demo-level heuristic, not ML-based or highly accurate
+  function classifyEmotion(frequency, volume) {
+    // frequency in Hz, volume normalized 0-1
+    if(volume < 0.03) return 'Neutral';
+    if(frequency > 350 && volume > 0.1) return 'Feliz';        // Voz aguda y volumen
+    if(frequency < 200 && volume > 0.1) return 'Triste';       // Voz grave y volumen
+    if(volume > 0.3 && frequency > 250 && frequency < 350) return 'Enojado'; // Volumen alto rango medio
+    return 'Neutral';
+  }
+
+  function getEmotionClass(emotion) {
+    switch(emotion) {
+      case 'Feliz': return 'emotion-happy';
+      case 'Triste': return 'emotion-sad';
+      case 'Enojado': return 'emotion-angry';
+      default: return 'emotion-neutral';
+    }
+  }
+
+  async function startMic() {
+    if(listening) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioContext = new AudioContext();
+      microphoneStream = stream;
+      sourceNode = audioContext.createMediaStreamSource(stream);
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 2048;
+      const bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+      sourceNode.connect(analyser);
+
+      listening = true;
+      toggleMicBtn.textContent = 'Detener Captura de Voz';
+      toggleMicBtn.setAttribute('aria-pressed', 'true');
+      micStatus.classList.add('mic-on');
+      micText.textContent = 'Micrófono activo';
+
+      update();
+    } catch (err) {
+      alert('No se pudo acceder al micrófono: ' + err.message);
+    }
+  }
+
+  function stopMic() {
+    if(!listening) return;
+    if(microphoneStream) {
+      microphoneStream.getTracks().forEach(track => track.stop());
+    }
+    if(sourceNode) sourceNode.disconnect();
+    if(analyser) analyser.disconnect();
+    if(audioContext) audioContext.close();
+
+    listening = false;
+    toggleMicBtn.textContent = 'Iniciar Captura de Voz';
+    toggleMicBtn.setAttribute('aria-pressed', 'false');
+    micStatus.classList.remove('mic-on');
+    micText.textContent = 'Micrófono apagado';
+    emotionText.textContent = 'Neutral';
+    emotionText.className = 'emotion-label emotion-neutral';
+    volumeFill.style.width = '0%';
+
+    if(animationId) cancelAnimationFrame(animationId);
+  }
+
+  function update() {
+    analyser.getByteFrequencyData(dataArray);
+
+    // Calculate average volume (normalized)
+    let sum = 0;
+    for(let i=0; i < dataArray.length; i++) {
+      sum += dataArray[i];
+    }
+    const avg = sum / dataArray.length;
+    const volume = avg / 255;
+
+    // Estimate dominant frequency - approximate
+    // Find index of max magnitude bin
+    let maxIdx = 0;
+    let maxVal = 0;
+    for(let i=0; i < dataArray.length; i++) {
+      if(dataArray[i] > maxVal) {
+        maxVal = dataArray[i];
+        maxIdx = i;
+      }
+    }
+    // Calculate frequency for maxIdx
+    const nyquist = audioContext.sampleRate/2;
+    const freq = maxIdx * nyquist / dataArray.length;
+
+    // Classify emotion
+    const emotion = classifyEmotion(freq, volume);
+    emotionText.textContent = emotion;
+    emotionText.className = 'emotion-label ' + getEmotionClass(emotion);
+
+    // Update volume meter
+    const volPercent = Math.min(volume * 200, 100);
+    volumeFill.style.width = volPercent + '%';
+
+    animationId = requestAnimationFrame(update);
+  }
+
+  toggleMicBtn.addEventListener('click', () => {
+    if(listening) {
+      stopMic();
+    } else {
+      startMic();
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>
+
